@@ -186,6 +186,7 @@ const AdminDashboardPage = () => {
                     <select value={newQuestion.type} onChange={e => setNewQuestion({...newQuestion, type: e.target.value})} className="w-full border-2 border-slate-200 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="radio">Radio (Single Choice)</option>
                         <option value="checkbox">Checkbox (Multiple Choice)</option>
+                        <option value="dropdown">Dropdown (Single Choice)</option> 
                     </select>
                     <textarea placeholder="Options (comma-separated, e.g., Yes,No)" value={newQuestion.options} onChange={e => setNewQuestion({...newQuestion, options: e.target.value})} className="w-full border-2 border-slate-200 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required />
                     <button type="submit" className="bg-green-600 text-white px-5 py-3 rounded-lg hover:bg-green-700 font-semibold transition-colors">Add Question</button>

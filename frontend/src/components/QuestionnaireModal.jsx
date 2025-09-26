@@ -164,36 +164,68 @@ const QuestionnaireModal = ({ closeModal, onFormSubmit }) => {
     // ==========================================================
     // === YAHAN PAR FINAL SIMPLIFIED LOGIC HAI ===
     // ==========================================================
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+        
+    //     const payload = {};
+        
+    //     questions.forEach((q, index) => {
+    //         const answer = formData[q._id];
+            
+    //         const questionKey = [
+    //             'businessType', 'enterpriseSize', 'udyamRequired', 'location', 
+    //             'supportType', 'employeesRange', 'turnoverRange', 'sectorSpecific'
+    //         ][index];
+            
+    //         let finalAnswer = answer;
+    //         // === YAHAN PAR CHANGE KIYA GAYA HAI ===
+    //         if (questionKey === 'enterpriseSize' && answer) {
+    //             // "Micro (Investment...)" se sirf "Micro" nikaalo
+    //             finalAnswer = answer.split(' ')[0];
+    //         } 
+    //         else if (questionKey === 'udyamRequired' || questionKey === 'sectorSpecific') {
+    //             finalAnswer = (answer === 'Yes');
+    //         }
+    //         // // Sirf "Yes/No" ko true/false mein convert karna zaroori hai
+    //         // // kyunki database mein iska type Boolean hai.
+    //         // if (questionKey === 'udyamRequired' || questionKey === 'sectorSpecific') {
+    //         //     finalAnswer = (answer === 'Yes');
+    //         // }
+            
+    //         payload[questionKey] = finalAnswer;
+    //     });
+
+    // ==========================================================
+    // === YAHAN PAR NAYE QUESTIONS KE HISAAB SE UPDATE KIYA HAI ===
+    // ==========================================================
     const handleSubmit = (e) => {
         e.preventDefault();
         
         const payload = {};
         
+        // Naye 7 questions ke hisaab se backend keys
+        const questionKeys = [
+            'businessType', 'enterpriseSize', 'location', 
+            'supportType', 'employeesRange', 'turnoverRange', 'states'
+        ];
+
         questions.forEach((q, index) => {
             const answer = formData[q._id];
             
-            const questionKey = [
-                'businessType', 'enterpriseSize', 'udyamRequired', 'location', 
-                'supportType', 'employeesRange', 'turnoverRange', 'sectorSpecific'
-            ][index];
+            // questionKeys array se key nikalo
+            const key = questionKeys[index];
             
             let finalAnswer = answer;
-            // === YAHAN PAR CHANGE KIYA GAYA HAI ===
-            if (questionKey === 'enterpriseSize' && answer) {
-                // "Micro (Investment...)" se sirf "Micro" nikaalo
+
+            // Enterprise Size se extra text hatao
+            if (key === 'enterpriseSize' && answer) {
                 finalAnswer = answer.split(' ')[0];
-            } 
-            else if (questionKey === 'udyamRequired' || questionKey === 'sectorSpecific') {
-                finalAnswer = (answer === 'Yes');
             }
-            // // Sirf "Yes/No" ko true/false mein convert karna zaroori hai
-            // // kyunki database mein iska type Boolean hai.
-            // if (questionKey === 'udyamRequired' || questionKey === 'sectorSpecific') {
-            //     finalAnswer = (answer === 'Yes');
-            // }
             
-            payload[questionKey] = finalAnswer;
+            payload[key] = finalAnswer;
         });
+
+
       
 
        //alert("Yeh data backend ko bheja jaa raha hai (Console bhi check karein):\n\n" + JSON.stringify(payload, null, 2));
@@ -221,19 +253,41 @@ const QuestionnaireModal = ({ closeModal, onFormSubmit }) => {
                              <div key={q._id} className="mb-6">
                                 <p className="font-semibold text-gray-700 mb-2">{`Q${index + 1}. ${q.text}`}</p>
                                 <div className="space-y-2">
-                                    {q.options.map(opt => (
+                                             {/* === YAHAN PAR LOGIC ADD KI GAYI HAI === */}
+
+                                    {/* Agar type 'radio' hai */}
+                                    {q.type === 'radio' && q.options.map(opt => (
                                         <label key={opt} className="flex items-center text-gray-600">
-                                            <input 
-                                                type={q.type} 
-                                                name={q._id}
-                                                value={opt} 
-                                                onChange={(e) => handleChange(e, q._id, q.type)}
-                                                className="mr-3"
-                                                required={q.type === 'radio' && !formData[q._id]}
-                                            />
+                                            <input type="radio" name={q._id} value={opt} onChange={(e) => handleChange(e, q._id, q.type)} className="mr-3" required={!formData[q._id]} />
                                             {opt}
                                         </label>
                                     ))}
+
+                                    {/* Agar type 'checkbox' hai */}
+                                    {q.type === 'checkbox' && q.options.map(opt => (
+                                        <label key={opt} className="flex items-center text-gray-600">
+                                            <input type="checkbox" name={q._id} value={opt} onChange={(e) => handleChange(e, q._id, q.type)} className="mr-3" />
+                                            {opt}
+                                        </label>
+                                    ))}
+
+                                    {/* Agar type 'dropdown' hai */}
+                                    {q.type === 'dropdown' && (
+                                        <select 
+                                            name={q._id} 
+                                            onChange={(e) => handleChange(e, q._id, q.type)} 
+                                            className="w-full p-2 border border-gray-300 rounded-md mt-1"
+                                            required={!formData[q._id]}
+                                            value={formData[q._id] || ''}
+                                        >
+                                            <option value="" disabled>-- Select an option --</option>
+                                            {q.options.map(opt => (
+                                                <option key={opt} value={opt}>{opt}</option>
+                                            ))}
+                                        </select>
+                                    )}
+
+                            
                                 </div>
                             </div>
                         ))}

@@ -41,6 +41,9 @@ import Footer from '../components/Footer';
 import QuestionnaireModal from '../components/QuestionnaireModal';
 import ResultsModal from '../components/ResultsModal'; // Naya Results Modal import karein
 
+import UdyamBanner from '../components/UdyamBanner'; // Naya banner import karein
+import UdyamModal from '../components/UdyamModal';
+
 // import Chatbot from 'react-chatbot-kit';
 // import 'react-chatbot-kit/build/main.css';
 // import config from '../chatbot/config.js';
@@ -55,6 +58,8 @@ const HomePage = () => {
   const [isLoading, setIsLoading] = useState(false); // Loading state
 
    const [isChatOpen, setChatOpen] = useState(false);
+
+   const [isUdyamModalOpen, setUdyamModalOpen] = useState(false); 
 
   // Yeh function QuestionnaireModal se data lega aur API call karega
   const handleFormSubmit = async (payload) => {
@@ -77,6 +82,7 @@ const HomePage = () => {
     <div className="bg-gray-50 min-h-screen">
       <Navbar />
       <main>
+             <UdyamBanner openModal={() => setUdyamModalOpen(true)} />
         <HeroSection openModal={() => setQuestionnaireModalOpen(true)} />
         <FeaturesSection openChat={() => setChatOpen(true)} />
       </main>
@@ -96,6 +102,12 @@ const HomePage = () => {
             isLoading={isLoading}
           />
       )}
+
+       {/* Naya Udyam Modal yahan add karein */}
+      {isUdyamModalOpen && (
+          <UdyamModal closeModal={() => setUdyamModalOpen(false)} />
+      )}
+
        {/* --- Chatbot Section (Updated) --- */}
       {/* Hum chatbot ko page ke content ke upar dikhayenge */}
       <div className={`fixed bottom-6 right-6 z-50 transition-all duration-300 ease-in-out ${

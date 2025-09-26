@@ -30,41 +30,78 @@ mongoose.connect('mongodb+srv://anshgupta78080:1bOXdlc5wyRxyuU3@cluster0.93ehy.m
 
 
 // Read Excel file
-const workbook = xlsx.readFile('AllSchemes.xlsx'); // your Excel file
+// const workbook = xlsx.readFile('AllSchemesNew.xlsx'); // your Excel file
+// const sheetName = workbook.SheetNames[0];
+// const sheet = workbook.Sheets[sheetName];
+// const data = xlsx.utils.sheet_to_json(sheet);
+
+// // Transform & Insert
+// const formattedData = data.map(row => ({
+//   schemeName: row['Scheme Name'],
+//   businessType: row['Q1 Business Type'].split(',').map(s => s.trim()),
+//   enterpriseSize: row['Q2 Enterprise Size'].split(',').map(s => s.trim()),
+//   udyamRequired: row['Q3 Udyam Required'] ? row['Q3 Udyam Required'].toLowerCase() === 'yes' : false,
+//   location: row['Q4 Location'].split(',').map(s => s.trim()),
+//   supportType: row['Q5 Support Type'].split(',').map(s => s.trim()),
+  
+//   // --- CHANGES START HERE ---
+
+//   // Updated to split the string into an array
+//   employeesRange: row['Q6 Employees Range'] ? row['Q6 Employees Range'].split(',').map(s => s.trim()) : [],
+//   turnoverRange: row['Q7 Turnover Range'] ? row['Q7 Turnover Range'].split(',').map(s => s.trim()) : [],
+  
+//   sectorSpecific: row['Q8 Sector-Specific'] ? row['Q8 Sector-Specific'].toLowerCase() === 'yes' : false,
+//   applicationLink: row['Application Link'],
+
+//   // New fields added
+//   description: row['Description'],
+//   natureOfAssistance: row['Nature of assistance'],
+//   whocanApply: row['Who can apply?'],
+//   howtoApply: row['How to apply?']
+
+// }));
+
+// Scheme.insertMany(formattedData)
+//   .then(() => {
+//     console.log('All schemes inserted successfully!');
+//     mongoose.connection.close();
+//   })
+//   .catch(err => console.error(err));
+
+// import mongoose from 'mongoose';
+// import xlsx from 'xlsx';
+// import Scheme from './models/Scheme.js';
+
+// ... MongoDB connection ...
+
+const workbook = xlsx.readFile('AllSchemesNew.xlsx');
 const sheetName = workbook.SheetNames[0];
 const sheet = workbook.Sheets[sheetName];
 const data = xlsx.utils.sheet_to_json(sheet);
 
-// Transform & Insert
 const formattedData = data.map(row => ({
   schemeName: row['Scheme Name'],
-  businessType: row['Q1 Business Type'].split(',').map(s => s.trim()),
-  enterpriseSize: row['Q2 Enterprise Size'].split(',').map(s => s.trim()),
-  udyamRequired: row['Q3 Udyam Required'] ? row['Q3 Udyam Required'].toLowerCase() === 'yes' : false,
-  location: row['Q4 Location'].split(',').map(s => s.trim()),
-  supportType: row['Q5 Support Type'].split(',').map(s => s.trim()),
-  
-  // --- CHANGES START HERE ---
-
-  // Updated to split the string into an array
-  employeesRange: row['Q6 Employees Range'] ? row['Q6 Employees Range'].split(',').map(s => s.trim()) : [],
-  turnoverRange: row['Q7 Turnover Range'] ? row['Q7 Turnover Range'].split(',').map(s => s.trim()) : [],
-  
-  sectorSpecific: row['Q8 Sector-Specific'] ? row['Q8 Sector-Specific'].toLowerCase() === 'yes' : false,
+  businessType: row['Q1 Business Type'] ? row['Q1 Business Type'].split(',').map(s => s.trim()) : [],
+  enterpriseSize: row['Q2 Enterprise Size'] ? row['Q2 Enterprise Size'].split(',').map(s => s.trim()) : [],
+  location: row['Q3 Location'] ? row['Q3 Location'].split(',').map(s => s.trim()) : [],
+  supportType: row['Q4 Support Type'] ? row['Q4 Support Type'].split(',').map(s => s.trim()) : [],
+  employeesRange: row['Q5 Employees Range'] ? row['Q5 Employees Range'].split(',').map(s => s.trim()) : [],
+  turnoverRange: row['Q6 Turnover Range'] ? row['Q6 Turnover Range'].split(',').map(s => s.trim()) : [],
+  states: row['States'] ? row['States'].split(',').map(s => s.trim()) : [],
   applicationLink: row['Application Link'],
-
-  // New fields added
   description: row['Description'],
   natureOfAssistance: row['Nature of assistance'],
   whocanApply: row['Who can apply?'],
-  howtoApply: row['How to apply?']
-
+  howtoApply: row['How to apply?'],
+  
 }));
 
 Scheme.insertMany(formattedData)
   .then(() => {
-    console.log('All schemes inserted successfully!');
+    console.log('✅ All schemes from new Excel file inserted successfully!');
     mongoose.connection.close();
   })
-  .catch(err => console.error(err));
-
+  .catch(err => {
+      console.error("Error inserting data:", err);
+      mongoose.connection.close();
+  });

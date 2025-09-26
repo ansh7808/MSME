@@ -17,25 +17,48 @@
 // export default mongoose.model('Scheme', schemeSchema);
 
 
+// import mongoose from 'mongoose';
+
+// const schemeSchema = new mongoose.Schema({
+//   schemeName: String,
+//   businessType: [String],
+//   enterpriseSize: [String],
+//   udyamRequired: Boolean,
+//   location: [String],
+//   supportType: [String],
+//   employeesRange: [String],
+//   turnoverRange: [String],
+//   sectorSpecific: Boolean,
+//   applicationLink: String,
+//   description: String,
+//   natureOfAssistance: String,
+//   whocanApply: String,
+//   howtoApply: String,
+// });
+
+// const Scheme = mongoose.model('Scheme', schemeSchema);
+
+// export default Scheme; 
+
+
 import mongoose from 'mongoose';
 
 const schemeSchema = new mongoose.Schema({
   schemeName: String,
   businessType: [String],
   enterpriseSize: [String],
-  udyamRequired: Boolean,
   location: [String],
   supportType: [String],
   employeesRange: [String],
   turnoverRange: [String],
-  sectorSpecific: Boolean,
   applicationLink: String,
   description: String,
   natureOfAssistance: String,
   whocanApply: String,
   howtoApply: String,
+  states: [String], // Naya 'states' field
 });
 
 const Scheme = mongoose.model('Scheme', schemeSchema);
 
-export default Scheme; 
+export default Scheme;
